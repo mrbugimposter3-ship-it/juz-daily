@@ -65,11 +65,38 @@ footer{margin-top:16px}
 @keyframes gl{0%,100%{opacity:.7}50%{opacity:1}}.glow{animation:gl 4s ease-in-out infinite}
 @keyframes su{from{transform:translateY(30px)}to{transform:translateY(-10px)}}.sun{animation:su 20s ease-out infinite alternate}
 @keyframes ry{0%,100%{opacity:.25}50%{opacity:.45}}.rays{animation:ry 6s ease-in-out infinite}
+/* v1.1: tabs, Hijri, Nature, wake toggle */
+.wk{min-width:42px;padding:6px 8px;opacity:.45;background:transparent}.wk.on{opacity:1;background:var(--g2);color:var(--t)}
+.tabs{display:flex;gap:0;margin:10px 0 0;border:1px solid #2a8c66;border-radius:12px;overflow:hidden}.tabs button{flex:1;border:0;border-radius:0;font-size:18px;background:#0a3528}.tabs button.on{background:var(--l);color:#000;font-weight:700}
+.mh h2 small{display:block;font-size:13px;color:var(--t);opacity:.75;font-weight:400}
+.d .gd{font-size:10px;opacity:.8;line-height:1.1}.d .gl{display:none}
+.d .ic{position:absolute;top:1px;right:3px;font-size:12px;line-height:1}.ic.hw,.ic.hf,.ic.hq{color:var(--gold)}
+.d .dot{position:absolute;bottom:3px;left:50%;width:4px;height:4px;margin-left:-2px;border-radius:50%;background:#a8f0c8;opacity:.55}
+.d.rm{background:#123f52}.d.q10{background:#1d3466}.d.dh{background:#4a3a12}.d.t{background:#14684a}
+.legend{display:flex;flex-wrap:wrap;gap:4px 12px;font-size:12px;opacity:.85;margin:8px 2px}.legend b{color:var(--gold)}
+.ev h3{margin:0 0 6px;color:var(--l);font-size:17px}.evr{display:flex;gap:8px;padding:4px 0;border-top:1px solid #1b5e47;font-size:14px;line-height:1.7}.evr:first-of-type{border-top:0}.eic{min-width:22px;text-align:center;color:var(--gold)}.evt b{color:var(--gold);font-weight:700}
+.warn{color:#ffd0c0}
+.nat{position:relative;border-radius:16px;overflow:hidden;margin-top:10px;padding:2px 8px 8px}.natbg{position:absolute;inset:0;z-index:0;opacity:.55}.natbg svg{width:100%;height:100%;display:block}.natin{position:relative;z-index:1}
+.nat .box{background:#062a1fd9}.nat .d{background:#0a3528d9}.nat .d.t{background:#14684a}.nat .d.ok{background:#1b7a52e6}.nat .d.sday{border-color:var(--gold)}.nat .wd{opacity:1;color:#fff;text-shadow:0 1px 2px #000}
+.nat .mh h2{background:#062a1fcc;border-radius:10px;padding:2px 6px}
+.loc{display:flex;align-items:center;gap:8px;margin:8px 0 0;background:#062a1fcc;border-radius:10px;padding:4px 8px}.loc span{flex:1;font-size:15px}.sm{min-height:34px;font-size:14px;padding:3px 10px}
+.geo{display:flex;gap:6px;margin:8px 0}.geo input{flex:1;min-width:0;font:inherit;font-size:16px;padding:8px;border-radius:10px;border:1px solid #2a8c66;background:#04201a;color:var(--t)}
+.geol{display:flex;flex-direction:column;gap:6px}.geol button{text-align:right}
+.sunl{font-size:14px;margin:4px 0}
+.d .eic2{font-size:12px;line-height:1}.d .wx{font-size:10px;white-space:nowrap}.d .wx b{font-weight:700}.d .wx i{font-style:normal;opacity:.75}.d .sun2{display:none;font-size:10px;opacity:.8;white-space:nowrap}
+.cal{grid-template-columns:repeat(7,minmax(0,1fr))}.wd{overflow:hidden;text-overflow:clip;white-space:nowrap}.cal.nt,.cal.hj{gap:3px}.cal.nt .d{min-height:72px;gap:1px;padding:3px 1px;overflow:hidden}.nat{padding:2px 4px 8px}
+@media (max-width:420px){.cal.nt .wd{font-size:11px}.d .wx{font-size:9px;letter-spacing:-.3px}}
+.spkb{padding:8px}.spk{width:100%;height:60px;display:block}
+.sunt summary{cursor:pointer;color:var(--l);min-height:30px}.sunt table{width:100%;border-collapse:collapse;font-size:13px;margin-top:6px}.sunt th,.sunt td{padding:3px 2px;text-align:center;border-bottom:1px solid #1b5e47}.sunt tr.t td{background:#14684a;color:var(--gold)}
+footer a{color:var(--l)}
+@keyframes fallp{from{transform:translateY(-60px)}to{transform:translateY(320px)}}@keyframes falll{from{transform:translate(0,-60px) rotate(0)}to{transform:translate(-40px,320px) rotate(200deg)}}
+.petal{animation:fallp 14s linear infinite}.snow{animation:fallp 11s linear infinite}.leaf{animation:falll 13s linear infinite;transform-box:fill-box}
+@media (min-width:700px){.d .gs{display:none}.d .gl{display:inline}.d .sun2{display:block}.d .wx,.d .eic2{font-size:13px}.cal.nt .d{min-height:100px}}
 @media (prefers-reduced-motion:reduce){*{animation:none!important}}
 @media (min-width:700px){.d{min-height:84px}.d .n{font-size:24px}.d .j{font-size:13px}:root{--fs:34px}}
 </style></head><body>
 <div id="bg"></div>
-<header><button id="back" hidden aria-label="رجوع">→</button><b id="ttl">ورد الجزء اليومي</b><button id="fsm" hidden aria-label="تصغير الخط">ع-</button><button id="fsp" hidden aria-label="تكبير الخط">ع+</button></header>
+<header><button id="back" hidden aria-label="رجوع">→</button><b id="ttl">ورد الجزء اليومي</b><button id="fsm" hidden aria-label="تصغير الخط">ع-</button><button id="fsp" hidden aria-label="تكبير الخط">ع+</button><button id="wk" class="wk" aria-label="إبقاء الشاشة مضاءة">☀️</button></header>
 <main id="home" class="wrap"></main>
 <main id="play" class="wrap" hidden></main>
 <div id="chip" class="chip" hidden></div>
@@ -83,5 +110,5 @@ footer{margin-top:16px}
  <div class="prog"><i id="pg"></i></div><div class="st" id="st"></div>
 </div>
 <audio id="au" preload="metadata"></audio>
-<script src="scenes.js"></script><script src="infaq.js"></script><script src="app.js"></script>
+<script src="scenes.js"></script><script src="infaq.js"></script><script src="astro.js"></script><script src="cal.js"></script><script src="app.js"></script>
 </body></html>

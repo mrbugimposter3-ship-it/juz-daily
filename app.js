@@ -14,13 +14,24 @@ var done=LS.g('done',{});
 function getJSON(u,ok,bad){var x=new XMLHttpRequest();x.open('GET',u);x.onload=function(){if((x.status===200||(x.status===0&&x.responseText))){try{ok(JSON.parse(x.responseText));return}catch(e){}}bad&&bad()};x.onerror=function(){bad&&bad()};try{x.send()}catch(e){bad&&bad()}}
 var MON=['يناير','فبراير','مارس','أبريل','مايو','يونيو','يوليو','أغسطس','سبتمبر','أكتوبر','نوفمبر','ديسمبر'],WD=['الأحد','الاثنين','الثلاثاء','الأربعاء','الخميس','الجمعة','السبت'];
 var view=new Date();view.setDate(1);
+var JD=window.JD=window.JD||{};JD.A=A;JD.E=E;JD.p2=p2;JD.key=key;JD.juzOf=juzOf;JD.LS=LS;JD.done=done;JD.MON=MON;JD.WD=WD;JD.getJSON=getJSON;
+JD.open=function(k,j){open(k,j)};JD.rerender=function(){if(!$('home').hidden)renderCal(true)};JD.tab=function(){return $('home').hidden?'':tab};
 
 /* ---------- home: Gregorian calendar ---------- */
 function home(){if(location.hash)location.hash='';else showHome()}
 window.home=home;
 function showHome(){stop();$('bg').hidden=true;$('play').hidden=$('bar').hidden=$('chip').hidden=true;$('home').hidden=false;$('back').hidden=$('fsm').hidden=$('fsp').hidden=true;$('ttl').textContent='ورد الجزء اليومي';$('bg').innerHTML='';document.title='ورد الجزء اليومي';renderCal()}
-function renderCal(){var h=$('home');h.innerHTML='';var now=new Date(),tk=key(now),tj=juzOf(now.getDate());
- var b=E('div','box today'),tx=E('div','tx');tx.appendChild(E('div',null,'ورد اليوم · '+WD[now.getDay()]+' '+A(now.getDate())+' '+MON[now.getMonth()]+' '+A(now.getFullYear())));
+var TABS=[['g','ميلادي'],['h','هجري'],['n','الطبيعة']],tab=LS.g('tab','g');if(!/^[ghn]$/.test(tab))tab='g';
+function renderCal(keep){var hm=$('home'),y0=keep?window.scrollY:0;hm.innerHTML='';var tb=E('div','tabs');tb.setAttribute('role','tablist');
+ TABS.forEach(function(t){var b=E('button',t[0]===tab?'on':'',t[1]);b.type='button';b.setAttribute('role','tab');b.setAttribute('aria-selected',t[0]===tab);b.onclick=function(){if(tab===t[0])return;tab=t[0];LS.s('tab',tab);renderCal();window.scrollTo(0,0)};tb.appendChild(b)});hm.appendChild(tb);
+ var c=E('div');hm.appendChild(c);try{if(tab==='h')JD.renderHijri(c);else if(tab==='n')JD.renderNature(c);else renderGreg(c)}catch(e){console.warn(e);c.appendChild(E('p','err','تعذّر عرض هذا التقويم على هذا الجهاز.'));renderGreg(c)}
+ var f=E('footer'),s1=E('section'),s2=E('p');f.appendChild(s1);f.appendChild(s2);
+ f.appendChild(E('p','note','التلاوة: الشيخ عبدالرحمن العوسي (mp3quran.net) · توقيت الآيات: mp3quran.net · نص المصحف العثماني: api.alquran.cloud · المعاني: Pickthall (English، ملكية عامة) و فتح محمد جالندھری (اردو)'));
+ var cr=E('p','note');cr.appendChild(document.createTextNode('الطقس والبحث عن المدن: '));var a=E('a',null,'Weather data by Open-Meteo.com');a.href='https://open-meteo.com/';a.target='_blank';a.rel='noopener';cr.appendChild(a);cr.appendChild(document.createTextNode(' ('));var a2=E('a',null,'CC BY 4.0');a2.href='https://creativecommons.org/licenses/by/4.0/';a2.target='_blank';a2.rel='noopener';cr.appendChild(a2);
+ cr.appendChild(document.createTextNode('؛ أسماء المدن من GeoNames) · التقويم الهجري: أم القرى · الفلك: محسوب على الجهاز (Meeus، VSOP87) · الإصدار ١٫١'));f.appendChild(cr);
+ hm.appendChild(f);infaqMount(s1,{ur:true});infaqTools(s2);if(y0)window.scrollTo(0,y0)}
+function renderGreg(h){var now=new Date(),tk=key(now),tj=juzOf(now.getDate());
+ var b=E('div','box today'),tx=E('div','tx');tx.appendChild(E('div',null,'ورد اليوم · '+WD[now.getDay()]+' '+A(now.getDate())+' '+MON[now.getMonth()]+' '+A(now.getFullYear())));try{tx.appendChild(E('div','note',JD.hStr(JD.hijri(now))))}catch(e){}
  tx.appendChild(E('div','big','الجزء '+A(tj)+(done[tk]?' ✓':'')));tx.appendChild(E('div','note','بصوت الشيخ عبدالرحمن العوسي، مع تظليل الكلمات وخلفيات تعبّر عن معنى الآيات'));
  var go=E('button',null,'▶ ابدأ');go.onclick=function(){open(tk)};b.appendChild(tx);b.appendChild(go);h.appendChild(b);
  var mh=E('div','mh'),pv=E('button',null,'›'),nx=E('button',null,'‹'),td=E('button',null,'اليوم');pv.setAttribute('aria-label','الشهر السابق');nx.setAttribute('aria-label','الشهر التالي');
@@ -33,15 +44,12 @@ function renderCal(){var h=$('home');h.innerHTML='';var now=new Date(),tk=key(no
   c.appendChild(E('span','n',A(d)));c.appendChild(E('span','j','الجزء '+A(juzOf(d))));if(done[k]){c.appendChild(E('span','ck','✓'));cnt++}
   c.setAttribute('aria-label',d+' '+MON[m]+' — الجزء '+juzOf(d)+(done[k]?' — تمّ':''));c.onclick=function(){open(k)};g.appendChild(c)})(d)}
  h.appendChild(g);
- h.appendChild(E('p','note','القاعدة: اليوم ١ إلى ٣٠ من الشهر = الجزء ١ إلى ٣٠ · اليوم ٣١ = الجزء ٣٠ مرة أخرى. أتممت '+A(cnt)+' من '+A(n)+' يومًا هذا الشهر (✓ يُحفظ على هذا الجهاز).'));
- var f=E('footer'),s1=E('section'),s2=E('p');f.appendChild(s1);f.appendChild(s2);
- f.appendChild(E('p','note','التلاوة: الشيخ عبدالرحمن العوسي (mp3quran.net) · توقيت الآيات: mp3quran.net · نص المصحف العثماني: api.alquran.cloud · المعاني: Pickthall (English، ملكية عامة) و فتح محمد جالندھری (اردو)'));
- h.appendChild(f);infaqMount(s1,{ur:true});infaqTools(s2)}
+ h.appendChild(E('p','note','القاعدة: اليوم ١ إلى ٣٠ من الشهر = الجزء ١ إلى ٣٠ · اليوم ٣١ = الجزء ٣٠ مرة أخرى. أتممت '+A(cnt)+' من '+A(n)+' يومًا هذا الشهر (✓ يُحفظ على هذا الجهاز).'))}
 
 /* ---------- player ---------- */
 var J=null,AY=[],cur=0,dateK='',au=$('au'),playing=false,raf=0,WT={},wtReal=0,lastTheme='',effTh=[],mode=LS.g('mode','ur'),spd=LS.g('spd',1),SP=[0.75,1,1.25,1.5],fs=LS.g('fs',0);
-function open(k){location.hash='d='+k}
-function route(){var m=/d=(\d{4}-\d\d-\d\d)/.exec(location.hash);if(!m){showHome();return}var p=m[1].split('-'),d=+p[2];loadJuz(juzOf(d),m[1])}
+function open(k,j){location.hash='d='+k+(j?'&j='+j:'')}
+function route(){var m=/d=(\d{4}-\d\d-\d\d)/.exec(location.hash);if(!m){showHome();return}var p=m[1].split('-'),d=+p[2],jm=/[&?]j=(\d+)/.exec(location.hash),j=jm?Math.max(1,Math.min(30,+jm[1])):juzOf(d);loadJuz(j,m[1])}
 window.addEventListener('hashchange',route);
 function loadJuz(j,k){stop();$('bg').hidden=false;dateK=k;$('home').hidden=true;var pl=$('play');pl.hidden=false;pl.innerHTML='<p class="note" style="margin-top:70px">… جارٍ التحميل</p>';$('back').hidden=$('fsm').hidden=$('fsp').hidden=false;$('bar').hidden=false;
  $('ttl').textContent='الجزء '+A(j);document.title='الجزء '+j+' — ورد الجزء اليومي';
@@ -115,5 +123,16 @@ $('spd').onclick=function(){spd=SP[(SP.indexOf(spd)+1)%SP.length];LS.s('spd',spd
 $('mk').onclick=function(){if(done[dateK])delete done[dateK];else done[dateK]=1;LS.s('done',done);updMk()};
 $('fsp').onclick=function(){if(fs<6)fs++;LS.s('fs',fs);setFs()};$('fsm').onclick=function(){if(fs>-3)fs--;LS.s('fs',fs);setFs()};
 document.addEventListener('keydown',function(e){if($('play').hidden)return;if(e.code==='Space'){e.preventDefault();toggle()}else if(e.key==='ArrowLeft')next(false);else if(e.key==='ArrowRight')prev()});
+/* keep the screen awake (☀️ toggle, default on): Android flag via bridge, else Screen Wake Lock API; silent if unsupported */
+var wake=LS.g('wake',true),wl=null;
+function wakeApply(){var b=$('wk');if(b){b.classList.toggle('on',!!wake);b.setAttribute('aria-pressed',!!wake);b.title=wake?'الشاشة تبقى مضاءة':'إطفاء الشاشة تلقائيًا'}
+ if(window.AndroidWake){try{window.AndroidWake.set(!!wake)}catch(e){}return}
+ if(!wake){if(wl){try{wl.release()}catch(e){}wl=null}return}
+ if(wl||document.visibilityState!=='visible'||!navigator.wakeLock||!navigator.wakeLock.request)return;
+ try{navigator.wakeLock.request('screen').then(function(l){wl=l;l.addEventListener('release',function(){if(wl===l)wl=null})},function(){})}catch(e){}}
+$('wk').onclick=function(){wake=!wake;LS.s('wake',wake);wakeApply()};
+document.addEventListener('visibilitychange',function(){if(document.visibilityState==='visible')wakeApply()});
+document.addEventListener('pointerdown',function(){if(wake&&!wl)wakeApply()},true);
+wakeApply();
 setMode(mode);route();
 })();
