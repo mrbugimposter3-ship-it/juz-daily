@@ -1,0 +1,87 @@
+<!doctype html><html lang="ar" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>ورد الجزء اليومي</title><meta name="theme-color" content="#062a1f"><link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="icon-192.png"><link rel="apple-touch-icon" href="icon-192.png"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="mobile-web-app-capable" content="yes">
+<style>
+@font-face{font-family:"AmiriL";src:url(Amiri.ttf) format("truetype");font-display:swap}
+:root{--g:#0b3d2e;--g2:#14684a;--l:#2ecc71;--t:#e8fff3;--d:#062a1f;--gold:#ffd54a;--fs:30px}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:var(--g);color:var(--t);font-family:system-ui,"Segoe UI",Tahoma,sans-serif}
+header{position:sticky;top:0;background:var(--d);display:flex;gap:6px;padding:8px;padding-top:max(8px,env(safe-area-inset-top));align-items:center;z-index:5}
+header b{flex:1;font-size:21px;color:var(--l);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+button{background:var(--g2);color:var(--t);border:1px solid #2a8c66;border-radius:10px;padding:6px 12px;font-size:16px;font-family:inherit;min-height:42px;cursor:pointer}
+button.on{background:var(--l);color:#000}button:disabled{opacity:.4}
+.wrap{max-width:900px;margin:0 auto;padding:0 10px calc(20px + env(safe-area-inset-bottom))}
+.note{font-size:13px;opacity:.85;line-height:1.7}
+.box{background:#0f4a37;border-radius:12px;padding:12px;margin:10px 0}
+/* calendar */
+.today{display:flex;flex-wrap:wrap;gap:10px;align-items:center}.today .tx{flex:1;min-width:200px}.today .big{font-size:24px;color:var(--gold);font-weight:700}
+.today button{font-size:20px;padding:10px 22px;background:var(--l);color:#000;font-weight:700}
+.mh{display:flex;align-items:center;gap:8px;margin:12px 0 6px}.mh h2{flex:1;margin:0;text-align:center;color:var(--l);font-size:22px}
+.cal{display:grid;grid-template-columns:repeat(7,1fr);gap:5px}
+.wd{text-align:center;font-size:13px;opacity:.75;padding:4px 0}
+.d{position:relative;background:#0a3528;border:1px solid #124d3a;border-radius:10px;min-height:64px;padding:4px;text-align:center;cursor:pointer;display:flex;flex-direction:column;justify-content:center;gap:2px;font:inherit;color:inherit}
+.d .n{font-size:20px;font-weight:700}.d .j{font-size:11px;color:#a8f0c8}.d.r31 .j{color:var(--gold)}
+.d.t{border:2px solid var(--gold);background:#14684a;box-shadow:0 0 12px #ffd54a55}
+.d.ok{background:#1b7a52}.d .ck{position:absolute;top:2px;left:5px;color:var(--gold);font-size:16px;font-weight:700}
+.d.e{visibility:hidden}
+/* player */
+#bg{position:fixed;inset:0;z-index:0;overflow:hidden;background:#062a1f}
+#bg .sc{position:absolute;inset:0;opacity:0;transition:opacity 1.6s ease}#bg .sc.on{opacity:1}#bg svg{width:100%;height:100%;display:block}
+#play,#home{position:relative;z-index:1}
+.chip{position:fixed;top:calc(64px + env(safe-area-inset-top));left:10px;z-index:4;background:#062a1fcc;border:1px solid #2a8c66;border-radius:20px;padding:3px 12px;font-size:13px;transition:opacity .4s}
+.txt{background:#04201acc;-webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px);border-radius:16px;padding:10px 14px;margin:56px 0 12px}
+.sh{text-align:center;margin:18px 0 6px;padding:6px;border:1px solid #2a8c66;border-radius:12px;background:#0b3d2ecc;font-family:AmiriL,"Amiri Quran",Amiri,serif;font-size:24px;color:var(--gold)}
+.bsm{text-align:center;font-family:AmiriL,"Amiri Quran",Amiri,serif;font-size:calc(var(--fs) * .9);margin:4px 0 8px}
+.ay{border-radius:12px;padding:6px 8px;margin:4px 0;transition:background .3s}
+.ay.cur{background:#14684acc;box-shadow:0 0 0 1px #2ecc71}
+.ar{font-family:AmiriL,"Amiri Quran",Amiri,"Noto Naskh Arabic","Geeza Pro",serif;font-size:var(--fs);line-height:2.15}
+.w{cursor:pointer;border-radius:6px;padding:0 1px;transition:color .15s,background .15s}
+.w.on{color:#000;background:var(--gold)}.w.pa{opacity:.95}
+.num{color:var(--l);font-size:.8em;white-space:nowrap}
+.mn{font-size:16px;line-height:1.8;opacity:.92;margin:2px 0 4px;border-top:1px dashed #2a8c6688;padding-top:3px}
+.mn.en{direction:ltr;text-align:left;font-family:Georgia,serif}.mn.ur{font-family:"Noto Nastaliq Urdu","Jameel Noori Nastaleeq",AmiriL,serif;font-size:18px;line-height:2.1}
+.bar{position:sticky;bottom:0;z-index:5;background:#062a1ff2;border-top:1px solid #2a8c66;padding:6px 8px calc(6px + env(safe-area-inset-bottom))}
+.ctl{display:flex;gap:6px;align-items:center;justify-content:center;flex-wrap:wrap;max-width:900px;margin:0 auto}
+.ctl .pp{font-size:24px;min-width:64px;background:var(--l);color:#000}
+.st{font-size:13px;opacity:.85;text-align:center;margin-top:3px}
+.prog{height:4px;background:#0a3528;border-radius:2px;margin:4px auto 0;max-width:900px}.prog i{display:block;height:100%;background:var(--gold);width:0;border-radius:2px}
+.seg{display:inline-flex;border:1px solid #2a8c66;border-radius:10px;overflow:hidden}.seg button{border:0;border-radius:0;min-width:44px}
+.done{background:#1b7a52}
+footer{margin-top:16px}
+.infaq{background:#0f4a37;border:1px solid #2a8c66;border-radius:12px;padding:10px;margin:18px 0 8px}
+.infaq-h{display:flex;align-items:center;gap:6px}.infaq-t{flex:1;color:var(--l);font-size:19px}.infaq-nav{display:flex;gap:6px}
+.infaq-b{padding:2px 14px;font-size:20px}
+.infaq-ar{display:block;font-family:AmiriL,"Amiri Quran",Amiri,serif;font-size:22px;line-height:2.1}
+.infaq-ref{display:block;color:var(--l);font-size:13px}
+.infaq-ur{display:block;font-size:16px;line-height:2}
+.infaq-all summary{cursor:pointer;color:#a8f0c8;margin-top:6px;min-height:30px}.infaq-all p{border-top:1px solid #1b5e47;margin:6px 0;padding-top:6px}
+.infaq-src{font-size:11px;opacity:.6;margin-top:6px}
+.infaq-tools{display:block;margin:10px 0 0;padding:8px 10px;font-size:13px;opacity:.9;border:1px dashed #2a8c66;border-radius:10px}.infaq-tools a{color:var(--l);font-weight:700}
+.err{background:#5c1f1a;padding:10px;border-radius:10px}
+@keyframes tw{0%,100%{opacity:.25}50%{opacity:1}}.tw{animation:tw 3.5s ease-in-out infinite}
+@keyframes wv{from{transform:translateX(0)}to{transform:translateX(200px)}}.wave{animation:wv 9s linear infinite}.w2{animation-duration:14s}
+@keyframes rn{from{transform:translateY(-40px)}to{transform:translateY(60px)}}.rain{animation:rn 1.6s linear infinite}
+@keyframes fl{0%,100%{transform:scaleY(1);opacity:.9}50%{transform:scaleY(1.06);opacity:.7}}.flick{transform-origin:200px 800px;animation:fl 1.8s ease-in-out infinite}.f2{animation-duration:1.2s}
+@keyframes sw{0%,100%{rotate:-2deg}50%{rotate:2deg}}.sway{animation:sw 4s ease-in-out infinite}
+@keyframes gl{0%,100%{opacity:.7}50%{opacity:1}}.glow{animation:gl 4s ease-in-out infinite}
+@keyframes su{from{transform:translateY(30px)}to{transform:translateY(-10px)}}.sun{animation:su 20s ease-out infinite alternate}
+@keyframes ry{0%,100%{opacity:.25}50%{opacity:.45}}.rays{animation:ry 6s ease-in-out infinite}
+@media (prefers-reduced-motion:reduce){*{animation:none!important}}
+@media (min-width:700px){.d{min-height:84px}.d .n{font-size:24px}.d .j{font-size:13px}:root{--fs:34px}}
+</style></head><body>
+<div id="bg"></div>
+<header><button id="back" hidden aria-label="رجوع">→</button><b id="ttl">ورد الجزء اليومي</b><button id="fsm" hidden aria-label="تصغير الخط">ع-</button><button id="fsp" hidden aria-label="تكبير الخط">ع+</button></header>
+<main id="home" class="wrap"></main>
+<main id="play" class="wrap" hidden></main>
+<div id="chip" class="chip" hidden></div>
+<div id="bar" class="bar" hidden>
+ <div class="ctl">
+  <button id="prv" aria-label="الآية السابقة">⏮</button><button id="pp" class="pp" aria-label="تشغيل">▶</button><button id="nxt" aria-label="الآية التالية">⏭</button>
+  <button id="spd" aria-label="السرعة">١×</button>
+  <span class="seg" id="mng"><button data-m="ar">ع</button><button data-m="en">EN</button><button data-m="ur">اردو</button></span>
+  <button id="mk">✓ تمّ</button>
+ </div>
+ <div class="prog"><i id="pg"></i></div><div class="st" id="st"></div>
+</div>
+<audio id="au" preload="metadata"></audio>
+<script src="scenes.js"></script><script src="infaq.js"></script><script src="app.js"></script>
+</body></html>
